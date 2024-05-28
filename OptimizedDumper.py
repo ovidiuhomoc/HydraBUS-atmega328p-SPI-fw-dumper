@@ -11,7 +11,7 @@ def get_tz_naive_datetime(tz_aware_datetime: datetime) -> datetime:
     return tz_aware_datetime.replace(tzinfo=None)
 
 
-def _now(self):
+def _now():
     return get_tz_naive_datetime(datetime.datetime.now(tz=pytz.timezone("Australia/Sydney")))
 
 
@@ -247,7 +247,8 @@ if __name__ == '__main__':
     dump_folder = os.path.join(os.path.dirname(__file__), "dump")
     if not os.path.exists(dump_folder):
         os.makedirs(dump_folder, exist_ok=True)
-    binary_dump = os.path.join(dump_folder, 'atmega328_flash_dump.bin')
+    now: datetime.datetime = _now()
+    binary_dump = os.path.join(dump_folder, f'atmega328_flash_dump_{now.year}_{now.month}_{now.day}T{now.hour}_{now.minute}_{now.second}.bin')
 
     dumper = HydraBusSPIFlashDumper(port="COM4", baudrate=115200, spi_device_select=2, chip=ChipType.Atmega328p)
     dumper.dump_flash(binary_dump)
